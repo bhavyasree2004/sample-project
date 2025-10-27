@@ -78,10 +78,21 @@ class EmploymentState {
     );
   }
 
+  factory EmploymentState.fromJson(Map<String, dynamic> json) {
+    return EmploymentState(
+      company: json['company'] ?? '',
+      designation: json['designation'] ?? '',
+      employmentType: json['employment_type'] ?? '',
+      skills: json['skills'],
+      experienceLetterPath: json['experience_letter_path'] ?? '',
+      duration: json['parttime_duration'] ?? '',
+    );
+  }
+
   Map<String, dynamic> toJson() => {
     'company': company,
     'designation': designation,
-    'employmentType': employmentType,
+    'employment_type': employmentType,
     'skills': skills,
     'experience_letter_path': experienceLetterPath,
     'parttime_duration': duration,
@@ -91,6 +102,10 @@ class EmploymentState {
 class EmploymentNotifier extends StateNotifier<EmploymentState>
     implements FormSection {
   EmploymentNotifier() : super(EmploymentState());
+
+  void loadFromJson(Map<String, dynamic> json) {
+    state = EmploymentState.fromJson(json);
+  }
 
   void setCompany(String name) =>
       state = state.copyWith(company: name, clearCompanyError: true);

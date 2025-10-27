@@ -78,6 +78,17 @@ class EducationState {
     );
   }
 
+  factory EducationState.fromJson(Map<String, dynamic> json) {
+    return EducationState(
+      schoolName: json['school_name'] ?? '',
+      degree: json['degree'] ?? '',
+      schoolType: json['school_type'] ?? '',
+      subjects: json['subjects'] ?? '',
+      transcriptPath: json['transcript_path'] ?? '',
+      feeDetails: json['fee_details'] ?? '',
+    );
+  }
+
   Map<String, dynamic> toJson() => {
     'school_name': schoolName,
     'degree': degree,
@@ -91,6 +102,10 @@ class EducationState {
 class EducationNotifier extends StateNotifier<EducationState>
     implements FormSection {
   EducationNotifier() : super(EducationState());
+
+  void loadFromJson(Map<String, dynamic> json) {
+    state = EducationState.fromJson(json);
+  }
 
   void setSchoolName(String name) =>
       state = state.copyWith(schoolName: name, clearSchoolNameError: true);

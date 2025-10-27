@@ -18,6 +18,17 @@ class FormValidator {
     return isValid;
   }
 
+  void loadAllFromJson(Map<String, dynamic> json) {
+    for (var section in sections) {
+      if (section is EducationNotifier && json.containsKey('education')) {
+        section.loadFromJson(json['education']);
+      } else if (section is EmploymentNotifier &&
+          json.containsKey('employment')) {
+        section.loadFromJson(json['employment']);
+      }
+    }
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> result = {};
     for (var section in sections) {
