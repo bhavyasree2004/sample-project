@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:hive/hive.dart';
 import 'package:sample_enumerator/form_providers/form_section.dart';
 
 class EmploymentState {
@@ -101,20 +102,45 @@ class EmploymentState {
 
 class EmploymentNotifier extends StateNotifier<EmploymentState>
     implements FormSection {
-  EmploymentNotifier() : super(EmploymentState());
+  EmploymentNotifier() : super(EmploymentState()) {
+    _loadLocalData();
+  }
+  final _employmentBox = Hive.box('employmentBox');
+
+  Future<void> _loadLocalData() async {
+    final savedData = _employmentBox.get('employmentData');
+    if (savedData != null) {
+      state = EmploymentState.fromJson(Map<String, dynamic>.from(savedData));
+    }
+  }
+
+  void _saveLocalData() {
+    _employmentBox.put('employmentData', state.toJson());
+    print("Data has been saved locally");
+  }
 
   void loadFromJson(Map<String, dynamic> json) {
     state = EmploymentState.fromJson(json);
   }
 
-  void setCompany(String name) =>
-      state = state.copyWith(company: name, clearCompanyError: true);
-  void setDesignation(String des) =>
-      state = state.copyWith(designation: des, clearDesignationError: true);
-  void setEmploymentType(String type) => state = state.copyWith(
-    employmentType: type,
-    clearEmploymentTypeError: true,
-  );
+  void setCompany(String name) {
+    state = state.copyWith(company: name, clearCompanyError: true);
+    _saveLocalData();
+  }
+
+  void setDesignation(String des) {
+    state = state.copyWith(designation: des, clearDesignationError: true);
+    _saveLocalData();
+  }
+
+  void setEmploymentType(String type) {
+    state = state.copyWith(
+      employmentType: type,
+      clearEmploymentTypeError: true,
+    );
+    _saveLocalData();
+  }
+
   void toggleSkill(String skill) {
     final skills = [...state.skills];
     if (skills.contains(skill)) {
@@ -123,6 +149,7 @@ class EmploymentNotifier extends StateNotifier<EmploymentState>
       skills.add(skill);
     }
     state = state.copyWith(skills: skills, clearSkillsError: true);
+    _saveLocalData();
   }
 
   void setExperienceLetterPath(String path) {
@@ -130,10 +157,12 @@ class EmploymentNotifier extends StateNotifier<EmploymentState>
       experienceLetterPath: path,
       clearExperienceLetterPathError: true,
     );
+    _saveLocalData();
   }
 
   void setDuration(String duration) {
     state = state.copyWith(duration: duration, clearDurationError: true);
+    _saveLocalData();
   }
 
   @override
@@ -196,6 +225,8 @@ class EmploymentNotifier extends StateNotifier<EmploymentState>
   @override
   void reset() {
     state = EmploymentState();
+    _employmentBox.delete('employmentData');
+    print("Data has been removed locally");
   }
 }
 

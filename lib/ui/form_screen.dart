@@ -8,27 +8,6 @@ import '../form_providers/validator_provider.dart';
 class FormScreen extends ConsumerWidget {
   const FormScreen({super.key});
 
-  Map<String, dynamic> get sampleJson {
-    return {
-      "education": {
-        "school_name": "Gayatri",
-        "degree": "10",
-        "school_type": "Private",
-        "subjects": ["Math", "English"],
-        "transcript_path": "/storage/emulated/0/Download/transcript.pdf",
-        "fee_details": "5000",
-      },
-      "employment": {
-        "company": "Cumulations",
-        "designation": "Software Developer",
-        "employment_type": "Full-time",
-        "skills": ["Flutter", "Firebase"],
-        "experience_letter_path": "/storage/emulated/0/Download/exp.pdf",
-        "parttime_duration": "",
-      },
-    };
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -37,14 +16,6 @@ class FormScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                final validator = ref.read(validatorProvider);
-                validator.loadAllFromJson(sampleJson);
-              },
-              child: const Text("Load JSON Data"),
-            ),
-
             const EducationSection(),
             const SizedBox(height: 30),
             const EmploymentSection(),

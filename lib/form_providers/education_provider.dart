@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:hive/hive.dart';
 import 'package:sample_enumerator/form_providers/form_section.dart';
 
 class EducationState {
@@ -101,18 +102,43 @@ class EducationState {
 
 class EducationNotifier extends StateNotifier<EducationState>
     implements FormSection {
-  EducationNotifier() : super(EducationState());
+  EducationNotifier() : super(EducationState()) {
+    _loadLocalData();
+  }
+
+  final _educationBox = Hive.box('educationBox');
+
+  Future<void> _loadLocalData() async {
+    final savedData = _educationBox.get('educationData');
+    if (savedData != null) {
+      state = EducationState.fromJson(Map<String, dynamic>.from(savedData));
+    }
+  }
+
+  void saveLocalData() {
+    _educationBox.put('educationData', state.toJson());
+    print("Data has been saved locally");
+  }
 
   void loadFromJson(Map<String, dynamic> json) {
     state = EducationState.fromJson(json);
   }
 
-  void setSchoolName(String name) =>
-      state = state.copyWith(schoolName: name, clearSchoolNameError: true);
-  void setDegree(String degree) =>
-      state = state.copyWith(degree: degree, clearDegreeError: true);
-  void setSchoolType(String type) =>
-      state = state.copyWith(schoolType: type, clearSchoolTypeError: true);
+  void setSchoolName(String name) {
+    state = state.copyWith(schoolName: name, clearSchoolNameError: true);
+    saveLocalData();
+  }
+
+  void setDegree(String degree) {
+    state = state.copyWith(degree: degree, clearDegreeError: true);
+    saveLocalData();
+  }
+
+  void setSchoolType(String type) {
+    state = state.copyWith(schoolType: type, clearSchoolTypeError: true);
+    saveLocalData();
+  }
+
   void toggleSubject(String subject) {
     final subjects = [...state.subjects];
     if (subjects.contains(subject)) {
@@ -121,16 +147,20 @@ class EducationNotifier extends StateNotifier<EducationState>
       subjects.add(subject);
     }
     state = state.copyWith(subjects: subjects, clearSubjectsError: true);
+    saveLocalData();
   }
 
-  void setFeeDetails(String value) =>
-      state = state.copyWith(feeDetails: value, clearFeeDetailsError: true);
+  void setFeeDetails(String value) {
+    state = state.copyWith(feeDetails: value, clearFeeDetailsError: true);
+    saveLocalData();
+  }
 
   void setTranscriptPath(String path) {
     state = state.copyWith(
       transcriptPath: path,
       clearTranscriptPathError: true,
     );
+    saveLocalData();
   }
 
   @override
@@ -205,6 +235,8 @@ class EducationNotifier extends StateNotifier<EducationState>
   @override
   void reset() {
     state = EducationState();
+    _educationBox.delete('educationData');
+    print("Data has been removed locally");
   }
 }
 
