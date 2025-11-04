@@ -120,6 +120,7 @@ class EducationNotifier extends StateNotifier<EducationState>
     print("Data has been saved locally");
   }
 
+  @override
   void loadFromJson(Map<String, dynamic> json) {
     state = EducationState.fromJson(json);
   }

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sample_enumerator/form_providers/basic_details_provider.dart';
 import 'package:sample_enumerator/form_providers/form_section.dart';
 
 import 'education_provider.dart';
@@ -25,6 +26,9 @@ class FormValidator {
       } else if (section is EmploymentNotifier &&
           json.containsKey('employment')) {
         section.loadFromJson(json['employment']);
+      } else if (section is BasicDetailsNotifier &&
+          json.containsKey('basic_details')) {
+        section.loadFromJson(json['basic_details']);
       }
     }
   }
@@ -48,6 +52,7 @@ final validatorProvider = Provider<FormValidator>((ref) {
   final sections = [
     ref.read(educationProvider.notifier),
     ref.read(employmentProvider.notifier),
+    ref.read(basicDetailsProvider.notifier),
   ];
   return FormValidator(sections: sections);
 });

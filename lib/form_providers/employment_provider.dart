@@ -119,6 +119,7 @@ class EmploymentNotifier extends StateNotifier<EmploymentState>
     print("Data has been saved locally");
   }
 
+  @override
   void loadFromJson(Map<String, dynamic> json) {
     state = EmploymentState.fromJson(json);
   }
