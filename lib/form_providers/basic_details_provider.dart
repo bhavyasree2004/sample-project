@@ -220,13 +220,13 @@ class BasicDetailsNotifier extends StateNotifier<BasicDetailsState>
   void setVoterIdNumber(String voterId) =>
       state = state.copyWith(voterId: voterId, clearVoterIdError: true);
 
-  void setReligion(String religion) =>
+  void setReligion(String? religion) =>
       state = state.copyWith(religion: religion, clearReligionError: true);
 
-  void setCaste(String caste) =>
+  void setCaste(String? caste) =>
       state = state.copyWith(caste: caste, clearCasteError: true);
 
-  void setSubCaste(String subCaste) =>
+  void setSubCaste(String? subCaste) =>
       state = state.copyWith(subCaste: subCaste, clearSubCasteError: true);
 
   void setCasteCertificateObtained(String casteCertificateObtained) =>
